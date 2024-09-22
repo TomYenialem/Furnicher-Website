@@ -1,0 +1,11 @@
+.delete{
+    cursor: pointer;
+}
+.cart{
+    background-color: #f1f5f9;
+    padding: 20px ;
+   
+}
+.total-carts{
+ line-height: 2.1;
+}
