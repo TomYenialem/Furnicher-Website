@@ -16,3 +16,6 @@
     border-bottom: 4px solid black;
 
 }
+.form-group{
+    box-shadow: 0px 0xp 10px rgba(0,0,0,0.6);
+}

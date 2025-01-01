@@ -107,11 +107,12 @@ export default function Login() {
 
   return (
     <div>
-      <div className="container-fluid">
-        <div className="contact-bg">
+      <div className="container">
+        <div className="contact-bg mt-5">
           <h2 className="fs-1">BE ONE OF US</h2>
           <h5 className="text-secondary">+251923685549</h5>
         </div>
+        <hr/>
       </div>
       <div className="container mt-3 col-md-6">
         <div className="rejester">

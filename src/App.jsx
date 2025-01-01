@@ -19,6 +19,8 @@ import { auth } from "./Componenets/Utility/Firebase";
 import { contextApi } from "./Componenets/Context/Context";
 import Payment from "./Componenets/Payment/Payment";
 import Protected from "./Componenets/ProtectedRoute/Protected";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
 
 
 function App() {
@@ -37,7 +39,9 @@ auth.onAuthStateChanged(authUser=>{
 })
   },[])
 
-
+const publicKey = loadStripe(
+  "pk_test_51QcSTFA2AFtkKJ4AGcx7m8pAmX1q590ZtjkxAqJvgW9hqFDCC4vKMcvI4658peUUOIUceG4hwwWL1Sf9e1xj6P4d00j1Nl7Jfi"
+);
   return (
     <>
       <Nav />
@@ -56,7 +60,9 @@ auth.onAuthStateChanged(authUser=>{
           path="/payments"
           element={
             // <Protected msg={'please login to pay'} rediretTo={'/payments'}>
+            <Elements stripe={publicKey}>
               <Payment />
+            </Elements>
             // </Protected>
           }
         />

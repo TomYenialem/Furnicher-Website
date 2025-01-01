@@ -1,9 +1,28 @@
-import React from "react";
+import React, { useState } from "react";
 import "./Footer.css";
 import { MdEmail } from "react-icons/md";
 import { BiPhone } from "react-icons/bi";
+import toast from "react-hot-toast";
 
 export default function () {
+  const[email,setEmail]=useState('')
+const[subscribed,setSubscribed]=useState(false)
+  const handleSubmit=()=>{
+    if(!email){
+      toast.error('please type your email')
+      return;
+    }
+       if (!email.includes("@") || !email.includes(".")) {
+         toast.error("Please enter a valid email address");
+         return;
+       } else {
+         toast.success("subscribed thank you");
+         setEmail('');
+         setSubscribed(true);
+
+       }
+
+  }
   return (
     <div className="footer p-4 mt-5">
       <div className="container ">
@@ -20,13 +39,26 @@ export default function () {
                 id="email"
                 placeholder="Enter email"
                 name="email"
+                value={email}
+                required
+                onChange={(e)=>setEmail(e.target.value)}
               />
               <button
+            
                 className="btn btn-warning text-light"
                 type="button"
                 id="button-addon2"
+                onClick={handleSubmit}
+                disabled={subscribed }
               >
-                Subscribe
+                {
+                  subscribed? (
+                    <span className="text-success ">Subscribed</span>
+                  ) : (
+                    <span className="text-dark">Subscribe</span>
+                  )
+                }
+               
               </button>
             </div>
           </div>

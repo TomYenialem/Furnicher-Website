@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import "./Shop.css";
 import homePages from "../../assets/images/asset";
 import { Link } from "react-router-dom";
@@ -9,62 +9,75 @@ import { contextApi } from "../Context/Context";
 import debounce from "lodash/debounce";
 import { useCallback } from "react";
 import { FaSearch } from "react-icons/fa";
+import toast from "react-hot-toast";
 export default function Shop() {
   const homes = homePages.filter((pro) => pro.catagori === "homepage");
   const { handelAddToCart } = useContext(contextApi);
   const [allpro, setAllPro] = useState(homes);
   const [shopColor, setShopColor] = useState("");
-  const [searchitem,setSearchItem]=useState('')
-  const[match,setMatch]=useState(false)
-  const handelSearch=(e)=>{
-    setSearchItem(e.target.value)
-  }
+  const [searchitem, setSearchItem] = useState("");
+  const [likedProducts, setLikedProducts] = useState({});
+  const [match, setMatch] = useState(false);
+  // like button
+  const handleLove = (productId) => {
+    if (!likedProducts[productId]) {
+      toast.success("Added to favorites");
+      setLikedProducts((prevState) => ({
+        ...prevState,
+        [productId]: true, // Mark the product as liked
+      }));
+    }
+  };
+
+  const handelSearch = (e) => {
+    setSearchItem(e.target.value);
+  };
 
   const handleProduct = (product) => {
     const chair = homePages.filter((pro) => pro.type === product);
     setAllPro(chair);
     handleColor(product);
-
   };
   const handleColor = (color) => {
     setShopColor(color);
   };
 
   const handelColor = (color) => {
-    
     let colors = homePages.filter((pro) => pro.color === color);
     setAllPro(colors);
     setShopColor(color);
-    window.scrollTo(0,300)
+    window.scrollTo(0, 300);
   };
 
   const price = (val) => {
-    let priceVal = homePages.filter((pro) => pro.price <= val);
+    let priceVal = homePages.filter(
+      (pro) => pro.price === val || pro.price > val
+    );
     setAllPro(priceVal);
     setShopColor(val);
-     window.scrollTo(0, 300);
+    window.scrollTo(0, 300);
   };
 
   const noProduct = () => {
     alert("COMING SOON");
-
   };
   const handleSearchProducts = useCallback(
     debounce((searchitem) => {
-      const search = homePages.filter((pro) => (pro.type).toLowerCase().includes(searchitem.toLowerCase()));
-     if(search.length==0){
-      setMatch(true)
-     }
-     else{
-      setMatch(false)
-     }
+      const search = homePages.filter((pro) =>
+        pro.type.toLowerCase().includes(searchitem.toLowerCase())
+      );
+      if (search.length == 0) {
+        setMatch(true);
+      } else {
+        setMatch(false);
+      }
       setAllPro(search);
-    }, 300), 
+    }, 300),
     [homePages]
   );
-   useEffect(() => {
-     handleSearchProducts(searchitem);
-   }, [searchitem, handleSearchProducts]);
+  useEffect(() => {
+    handleSearchProducts(searchitem);
+  }, [searchitem, handleSearchProducts]);
 
   return (
     <div>
@@ -212,7 +225,12 @@ export default function Shop() {
                         </div>
 
                         <div className="heart-div">
-                          <FaHeart className="heartd" />
+                          <FaHeart
+                            className={`heartd ${
+                              likedProducts[index] ? "active" : ""
+                            }`} // Add 'active' class if liked
+                            onClick={() => handleLove(index)}
+                          />
                         </div>
                       </div>
                       <p className="text-center text-secondary pro-txt">

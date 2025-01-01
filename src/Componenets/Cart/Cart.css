@@ -9,3 +9,8 @@
 .total-carts{
  line-height: 2.1;
 }
+
+
+button:disabled {
+  cursor: not-allowed;  
+}

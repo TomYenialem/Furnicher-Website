@@ -6,7 +6,12 @@
     background-size: cover;
     background-color: #1e293b;
     padding: 90px 190px;
+    /* margin-bottom: 550px; */
  
+}
+.log{
+    margin-top: 150px;
+    height: auto;
 }
 @media(max-width:600px){
     .conatct-bg{
@@ -20,6 +25,8 @@
     flex-direction: column;
     align-items: flex-start;
     justify-content: flex-start;
+    padding: 100px 30px;
+    margin-top: 30px;
 }
 .break{
     width: 70px;

@@ -11,11 +11,10 @@ export default function Context({ children }) {
   const [open, setOpen] = useState(false);
   const [products, setProducts] = useState(home);
   const [addCart, setAddToCart] = useState({});
+  const[country,setCountry]=useState([])
   const hasProdcut = Object.values(addCart).some((pro) => pro > 0);
   const [add, setAdd] = useState(0);
-
   const handelAddToCart = (index) => {
-    
     setAddToCart((addCart) => {
       let addtoCartItem = { ...addCart, [index]: (addCart[index] || 0) + 1 };
       const hasProdcut = Object.values(addtoCartItem).some((pro) => pro > 0);
@@ -37,25 +36,30 @@ export default function Context({ children }) {
     setOpen((prev) => !prev);
   };
   const offices = () => {
- 
     setProducts(office);
     setOpen((prev) => !prev);
   
   };
 
-  const total = () => {
-    // let sum=0;
+const total = () => {
+  let sum = 0;
 
-    for (let x in addCart) {
-      if (addCart[x] > 0) {
-        let itmes = homePages.find((pro) => pro.id === x);
-        // console.log(itmes)
-        //         sum+=(itmes.price) *addCart[x]
-        //       }
+  // Loop through the cart (addCart)
+  for (let x in addCart) {
+    if (addCart[x] > 0) {
+      // Find the product in homePages by matching the product id
+      let item = homePages.find((pro) => pro.id === x);
+
+      // If the product is found and has a price, calculate the total for this product
+      if (item && item.price) {
+        sum += item.price * addCart[x];
       }
     }
-    //  return sum;
-  };
+  }
+
+  return sum; // Return the total sum
+};
+console.log(total())
 
 
   const contextValues = {
@@ -78,6 +82,8 @@ export default function Context({ children }) {
     setUserInfo,
     authUser,
     setAuthUser,
+    setCountry,
+    country
 
   };
   return (

@@ -7,11 +7,14 @@ import { Link, useNavigate } from "react-router-dom";
 
 
 export default function Cart() {
-  const { addCart,removeCart,total,hasProdcut,authUser } = useContext(contextApi);
+  const { addCart, removeCart, total, hasProdcut, authUser, setCountry,country } =
+    useContext(contextApi);
   const navigate=useNavigate()
  
 
- 
+ const handleChange=(e)=>{
+   setCountry(e.target.value)
+ }
 
   return (
     <div>
@@ -60,12 +63,16 @@ export default function Cart() {
                 <h3>Calculate Shipping</h3>
                 <div className="row">
                   <div className="col-md  ">
-                    <select style={{ padding: "10px", width: "120px" }}>
-                      <option value="">USA</option>
-                      <option value="">UK</option>
-                      <option value="">FRANCE</option>
-                      <option value="">CHINA</option>
-                      <option value="">ETHIOPIA</option>
+                    <select
+                      style={{ padding: "10px", width: "120px" }}
+                      onChange={handleChange}
+                      value={country}
+                    >
+                      <option value="USA">USA</option>
+                      <option value="UK">UK</option>
+                      <option value="FRANCE">FRANCE</option>
+                      <option value="CHINA">CHINA</option>
+                      <option value="ETHIOPIA">ETHIOPIA</option>
                     </select>
                   </div>
                   <div className="col-md">
@@ -79,7 +86,7 @@ export default function Cart() {
                   </div>
                 </div>
 
-                <button className="bg-dark col-md-12 mt-5">Estimate</button>
+                <button className="bg-dark col-md-12 mt-5 text-secondary" disabled>Estimate</button>
               </div>
               <div className="col-md">
                 <div className="cart">

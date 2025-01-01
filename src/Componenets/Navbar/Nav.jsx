@@ -58,9 +58,10 @@ export default function () {
               </Link>
             </li>
             <li className="nav-item" onClick={handleNavLinkClick}>
-              <a className="nav-link" href="#">
+               <Link to="/shop" className="nav-link">
                 New Arrivals
-              </a>
+              </Link>
+             
             </li>
             <li className="nav-item" onClick={handleNavLinkClick}>
               <Link to={"/contact"} className="nav-link">
@@ -89,7 +90,7 @@ export default function () {
           </p>
         ) : (
           <Link to={`${!authUser && "/login"}`}>
-            <BsPerson className="me-2" />
+            <BsPerson className="me" />
           </Link>
         )}
               
