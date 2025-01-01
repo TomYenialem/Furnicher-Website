@@ -3,12 +3,12 @@ import { contextApi } from "../Context/Context";
 import homePages from "../../assets/images/asset";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import './Cart.css'
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 
 export default function Cart() {
-  const { addCart,removeCart,total,hasProdcut } = useContext(contextApi);
-
+  const { addCart,removeCart,total,hasProdcut,authUser } = useContext(contextApi);
+  const navigate=useNavigate()
  
 
  
@@ -96,14 +96,16 @@ export default function Cart() {
                       <div className="col-md">${total()}</div>
                       <div className="col-md">$5</div>
                       <div className="col-md">
-                        <h4>${total()+5}</h4>
+                        <h4>${total() + 5}</h4>
                       </div>
                     </div>
                   </div>
                 </div>
-                <button className="bg-dark mt-5 col-md-12 fw-bold ">
-                  CheckOut
-                </button>
+                <Link to={`${authUser ? "/payments" : "/login"}`}>
+                  <button className="bg-dark mt-5 col-md-12 fw-bold ">
+                    CheckOut
+                  </button>
+                </Link>
               </div>
             </div>
           </div>
@@ -111,8 +113,8 @@ export default function Cart() {
       ) : (
         <div className="mt-5 text-center text-danger  fw-bold">
           <p className="fs-3">NO PRODUCT ADDED YET</p>
-          <Link to={'/shop'}>
-          <button className="bg-dark">Shop Now</button>
+          <Link to={"/shop"}>
+            <button className="bg-dark">Shop Now</button>
           </Link>
         </div>
       )}

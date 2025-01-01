@@ -1,55 +1,10 @@
-.payment {
-  width: 90%;
-  margin: 40px auto;
-}
-.address {
+.payment{
   display: flex;
+  width: 80%;
+  margin: 30px auto;
+  justify-content: space-between;
 }
-.address h3 {
-  width: 300px;
-}
-.review img {
-  width: 200px;
-}
-.cards {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.pay_card {
-  width: 50%;
-  margin: 0 auto;
-}
-.total_order{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin-top: 30px;
-}
-.total_order button{
-    border: none;
-    width: 50%;
-    background-color: var(--primary-color);
-    padding: 5px 10px;
-    border-radius: 10px;
-    margin-top: 10px;
-}
-.total_order button:hover{
-    background-color: var(--primary-hover)
-}
-
-@media(max-width:768px){
-
-.pay_form,.cards,.total_order,.address{
-  display: flex;
-  flex-direction: column;
-}
-.pay_card {
-  width: 100%;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-}
+.address{
+  font-size: 24px;
+  color: #fbbf24;;
 }

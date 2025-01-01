@@ -7,13 +7,15 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../Utility/Firebase";
 import { PulseLoader  } from 'react-spinners'
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { contextApi } from "../Context/Context";
 
 export default function Login() {
   const {userInfo,setUserInfo}=useContext(contextApi)
   const [login, setLogin] = useState(true);
   const [loading,setLoading] = useState(false);
+  const location=useLocation()
+  console.log(location)
   const navigate=useNavigate()
   const [formData, setFormData] = useState({
     name: "",
@@ -65,7 +67,7 @@ export default function Login() {
 
         console.log("Logged in user:", user); 
         setLoading(false);
-        navigate("/");
+        navigate(location?.state?.rediretTo||'/');
         toast.success("Successfully logged in");
       } catch (error) {
         toast.error(error.code);

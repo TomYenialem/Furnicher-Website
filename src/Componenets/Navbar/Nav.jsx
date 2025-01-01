@@ -7,12 +7,12 @@ import { contextApi } from "../Context/Context";
 import logo from "../../assets/images/bed/logo.jpg";
 import { CgMenuRightAlt } from "react-icons/cg";
 import { IoMdCart } from "react-icons/io";
+import { auth } from "../Utility/Firebase";
 
 export default function () {
   const handleNavLinkClick = () => {
-   const {userInfo} = useContext(contextApi)
-     console.log(userInfo)
-    console.log(userInfo)
+   
+ 
     const collapsibleNavbar = document.getElementById("collapsibleNavbar");
     if (collapsibleNavbar) {
       const bootstrapCollapse = new bootstrap.Collapse(collapsibleNavbar, {
@@ -21,6 +21,7 @@ export default function () {
       bootstrapCollapse.hide();
     }
   };
+  const { authUser } = useContext(contextApi);
   const { add } = useContext(contextApi);
   return (
     <nav className="navbar navbar-expand-md p-1 sticky-top ">
@@ -68,23 +69,31 @@ export default function () {
             </li>
           </ul>
         </div>
-        <div className="cart-dev   m-4  d-md-flex ">
-          {/* <Link to={"/cart"}>
-            <IoMdCart className=" me-4 " />
-            <span className="add-count-number">{add}</span>
-          </Link> */}
-
-          <Link to={'/login'} className=" d-md-block ">
-          { <BsPerson className="me-2" />}
-
+      </div>
+      <div className="cart-logout">
+        <div className="cart_icon">
+          <Link to={"/cart"}>
+            <IoMdCart size={24} />
+            <span className="num">{add}</span>
           </Link>
         </div>
-      </div>
-      <div className="cart-items">
-        <Link to={"/cart"}>
-          <IoMdCart className=" me-4 " />
-          <span className="add-count-number">{add}</span>
-        </Link>
+              <div className="logout-auth">
+        {authUser ? (
+          <p className="logout">
+            <>
+              <>{`wellcome ${authUser?.email?.split("@")[0]}`}</>
+              <p>
+                <p onClick={() => auth.signOut()} className="logout-para">logout</p>
+              </p>
+            </>
+          </p>
+        ) : (
+          <Link to={`${!authUser && "/login"}`}>
+            <BsPerson className="me-2" />
+          </Link>
+        )}
+              
+              </div>
       </div>
     </nav>
   );

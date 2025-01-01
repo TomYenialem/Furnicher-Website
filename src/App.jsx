@@ -3,7 +3,7 @@ import Nav from "./Componenets/Navbar/Nav";
 import { Toaster } from "react-hot-toast";
 
 import Footer from "./Componenets/Footer/Footer";
-import { Route, Routes, Router } from "react-router-dom";
+import { Route, Routes, Router, useNavigate } from "react-router-dom";
 import Shop from "./Componenets/Shop/Shop";
 import Home from "./Componenets/Home/Home";
 import Detail from "./Componenets/Details/Detail";
@@ -17,9 +17,12 @@ import Scroll from "./Componenets/ScrollTop/Scroll";
 import { useContext, useEffect } from "react";
 import { auth } from "./Componenets/Utility/Firebase";
 import { contextApi } from "./Componenets/Context/Context";
+import Payment from "./Componenets/Payment/Payment";
+import Protected from "./Componenets/ProtectedRoute/Protected";
 
 
 function App() {
+
   const {setAuthUser}=useContext(contextApi)
   useEffect(()=>{
 auth.onAuthStateChanged(authUser=>{
@@ -33,6 +36,8 @@ auth.onAuthStateChanged(authUser=>{
 
 })
   },[])
+
+
   return (
     <>
       <Nav />
@@ -47,8 +52,16 @@ auth.onAuthStateChanged(authUser=>{
         <Route path="/login" element={<Login />} />
         <Route path="/toHome" element={<ToHome />} />
         <Route path="/office" element={<ToOffice />} />
+        <Route
+          path="/payments"
+          element={
+            // <Protected msg={'please login to pay'} rediretTo={'/payments'}>
+              <Payment />
+            // </Protected>
+          }
+        />
       </Routes>
-      <Toaster position="top-right"/>
+      <Toaster position="top-right" />
       <Footer />
     </>
   );
