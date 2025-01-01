@@ -1,131 +1,112 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import "./Login.css";
-import { FaEye } from "react-icons/fa";
-import { FaEyeSlash } from "react-icons/fa";
-import { SiLabview, SiSlashdot } from "react-icons/si";
-import { toast, ToastContainer } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css'; 
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { SiSlashdot } from "react-icons/si";
+import toast from "react-hot-toast";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../Utility/Firebase";
+import { PulseLoader  } from 'react-spinners'
+import { useNavigate } from "react-router-dom";
+import { contextApi } from "../Context/Context";
 
 export default function Login() {
+  const {userInfo,setUserInfo}=useContext(contextApi)
   const [login, setLogin] = useState(true);
-  const [name, setName] = useState("");
-  const [pass, setPass] = useState("");
-  const [email, setEmail] = useState("");
-  const [confirm, setConfirm] = useState("");
-  const [emailColor, setEmailColor] = useState("1px solid black");
-  const [nameColor, setNameColor] = useState("1px solid black");
-  const [passColor, setPassColor] = useState("1px solid black");
-  const [confirmColor, setConfirmColor] = useState("1px solid black");
-  const [emailErr, setEmailErr] = useState("");
-  const [nameErr, setNameErr] = useState("");
-  const [passErr, setPassErr] = useState("");
-  const [confirmErr, setConfirmErr] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
+  const [loading,setLoading] = useState(false);
+  const navigate=useNavigate()
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    pass: "",
+    confirm: "",
+  });
+  const [formErrors, setFormErrors] = useState({
+    name: "",
+    email: "",
+    pass: "",
+    confirm: "",
+  });
+  const [fieldStyles, setFieldStyles] = useState({
+    name: "1px solid black",
+    email: "1px solid black",
+    pass: "1px solid black",
+    confirm: "1px solid black",
+  });
+  const [showPassword, setShowPassword] = useState(true);
   const [borderColor, setBorderColor] = useState(true);
 
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevState) => ({ ...prevState, [name]: value }));
+  };
+
+  const handleTabSwitch = (isLogin) => {
+    setLogin(isLogin);
+    setBorderColor(isLogin);
+  };
 
 
 
-  const handelName = (e) => {
-    setName(e.target.value);
-  };
-  const handelEmail = (e) => {
-    setEmail(e.target.value);
-  };
-  const handelPassword = (e) => {
-    setPass(e.target.value);
-  };
-  const handelConfrimPass = (e) => {
-    setConfirm(e.target.value);
-  };
 
-  const hadeleLogin = () => {
-    setLogin(false);
-    setBorderColor(false);
-  };
-  const handlerejester = () => {
-    setLogin(true);
-    setBorderColor(true);
-  };
-  let isNameValid = true;
-  let isEmailValid = true;
-  let isPassValid = true;
-  let isConfirmValid = true;
-  const handelsubmit = (e) => {
-   
+  const handleLoginSubmit = async (e) => {
     e.preventDefault();
-    
-    if (name == "") {
-      setNameColor("1px solid red");
-      setNameErr("please insert your name");
-      toast.error("please fill the input");
-      isNameValid=false
-    } else {
-      setNameColor("1px solid green");
-      setNameErr("");
-    }
-    if (email.includes("@gmail.com")) {
-      setEmailColor("1px solid green");
-      setEmailErr("");
-    } else {
-      setEmailColor("1px solid red");
-      setEmailErr("please provide @gmail.com ");
+    if (formData.email.includes("@gmail.com") && formData.pass !== "") {
+      try {
+        setLoading(true);
+        const userCredential = await signInWithEmailAndPassword(
+          auth,
+          formData.email,
+          formData.pass
+        );
 
-      isEmailValid = false;
-    }
-    if (pass == "") {
-      setPassColor("1px solid red");
-      setPassErr("please provide a passwor");
-      isPassValid = false;
-    }
-   
-     if (pass.length < 8) {
-      setPassColor("1px solid red");
-      setPassErr("password to weak");
-      isPassValid=false
-    } else if (pass.length >= 8 && pass !== "") {
-      setPassColor("1px solid green");
-      setPassErr("");
-    }
+        const user = userCredential.user;
+        setUserInfo([user]);
 
-    if (pass !== "" && pass === confirm) {
-      setConfirmColor("1px solid green");
-      setConfirmErr("");
+        console.log("Logged in user:", user); 
+        setLoading(false);
+        navigate("/");
+        toast.success("Successfully logged in");
+      } catch (error) {
+        toast.error(error.code);
+        setLoading(false);
+      }
     } else {
-      setConfirmColor("1px solid red");
-      setConfirmErr("password doesnot match");
-    
-      isConfirmValid=false
-    }
-    if(isConfirmValid && isEmailValid && isNameValid && isPassValid){
-      toast.success("Successfully registered");
+      toast.error("Please fill the input correctly");
     }
   };
-const handleLoginFormat=(e)=>{
-  e.preventDefault()
-if (email.includes("@gmail.com")) {
-      setEmailColor("1px solid green");
-      setEmailErr("");
+  const createAccount=async(e)=>{
+    e.preventDefault();
+    if(formData.pass!==formData.confirm){
+      toast.error("Passwords do not match")
+      return;
+    }
+    if (formData.email.includes("@gmail.com") && formData.pass!== "") {
+      try {
+        setLoading(true);
+        await createUserWithEmailAndPassword(auth, formData.email, formData.pass)
+        .then((user)=>{
+          userInfo=[user]
+        })
+        setLoading(false)
+         setLogin(true);
+        toast.success("Successfully created an account");
+      } catch (error) {
+        toast.error(error.code);
+          setLoading(false);
+        console.log(error)
+      }
     } else {
-      setEmailColor("1px solid red");
-      setEmailErr("please provide @gmail.com ");
-          toast.error("please fill the input");
-      isEmailValid=false
+      toast.error("Please fill the input correctly");
+      setFieldStyles('1px solid red')
+
     }
-     if (pass == "") {
-      setPassColor("1px solid red");
-      setPassErr("please provide a passwor");
-      isPassValid=false
-    }
-    if(isEmailValid && isPassValid){
-    toast.success("Successfully Login");  
-    }
-}
+  }
+
   return (
     <div>
-      <ToastContainer position="top-right" />
       <div className="container-fluid">
-        <div className="conatct-bg ">
+        <div className="contact-bg">
           <h2 className="fs-1">BE ONE OF US</h2>
           <h5 className="text-secondary">+251923685549</h5>
         </div>
@@ -133,136 +114,123 @@ if (email.includes("@gmail.com")) {
       <div className="container mt-3 col-md-6">
         <div className="rejester">
           <h2
-            onClick={handlerejester}
+            onClick={() => handleTabSwitch(true)}
             className={borderColor ? "addBorder" : ""}
           >
             Login
-          </h2>{" "}
-          <span className="slash">{<SiSlashdot />}</span>
-          <h2 onClick={hadeleLogin} className={borderColor ? "" : "addBorder"}>
-            Regester
+          </h2>
+          <span className="slash">
+            <SiSlashdot />
+          </span>
+          <h2
+            onClick={() => handleTabSwitch(false)}
+            className={borderColor ? "" : "addBorder"}
+          >
+            Register
           </h2>
         </div>
 
         {login ? (
           <div>
-            <form>
+            <form onSubmit={handleLoginSubmit}>
               <div className="mb-3 mt-3">
                 <label>Email:</label>
                 <input
                   type="email"
+                  name="email"
                   className="form-control email"
                   placeholder="Enter email"
-                  value={email}
-                  onChange={handelEmail}
-                  style={{ border: emailColor }}
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  style={{ border: fieldStyles.email }}
                 />
-                <small className="text-danger">{emailErr}</small>
+                <small className="text-danger">{formErrors.email}</small>
               </div>
               <div className="mb-3 password">
                 <label>Password:</label>
                 <input
-                  type={showPassword ? "text" : "password"}
+                  type={!showPassword ? "text" : "password"}
+                  name="pass"
                   className="form-control"
                   placeholder="Enter password"
-                  value={pass}
-                  onChange={handelPassword}
-                  style={{ border: passColor }}
+                  value={formData.pass}
+                  onChange={handleInputChange}
+                  style={{ border: fieldStyles.pass }}
                 />
                 <p
-                  onClick={() => setShowPassword((prev) => !prev)}
+                  onClick={() => setShowPassword(!showPassword)}
                   className="eye"
                 >
                   {showPassword ? <FaEyeSlash /> : <FaEye />}
                 </p>
-                <small className="text-danger">{passErr}</small>
+                <small className="text-danger">{formErrors.pass}</small>
               </div>
-              <div className="form-check mb-3">
-                <label className="form-check-label">
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    name="remember"
-                  />{" "}
-                  Remember me
-                </label>
-              </div>
-              <button
-                type="submit"
-                className="btn btn-dark text-white"
-                onClick={handleLoginFormat}
-              >
-                Login
+              <button type="submit" className="btn btn-dark text-white">
+                {loading ? <PulseLoader  size={10} color="white"/> : " Login"}
               </button>
             </form>
           </div>
         ) : (
-          <>
-            <form>
-              <div className="mb-3 mt-3">
-                <label>Name:</label>
-                <input
-                  type="name"
-                  className="form-control"
-                  placeholder="Enter Your Name"
-                  value={name}
-                  onChange={handelName}
-                  style={{ border: nameColor }}
-                />
-              </div>
-              <small className="text-danger">{nameErr}</small>
-              <div className="mb-3 mt-3">
-                <label>Email:</label>
-                <input
-                  type="email"
-                  className="form-control"
-                  placeholder="Enter email"
-                  value={email}
-                  onChange={handelEmail}
-                  style={{ border: emailColor }}
-                />
-              </div>
-              <small className="text-danger">{emailErr}</small>
-              <div className="mb-3 password">
-                <label>Password:</label>
-                <input
-                  type={showPassword ? "text" : "password"}
-                  className="form-control"
-                  placeholder="Enter password"
-                  value={pass}
-                  onChange={handelPassword}
-                  style={{ border: passColor }}
-                />
-                <p
-                  onClick={() => setShowPassword((prev) => !prev)}
-                  className="eye"
-                >
-                  {" "}
-                  {showPassword ? <FaEyeSlash /> : <FaEye />}
-                </p>
-              </div>
-              <small className="text-danger">{passErr}</small>
-              <div className="mb-3">
-                <label>Confirm Password:</label>
-                <input
-                  type="password"
-                  className="form-control"
-                  placeholder="Enter password"
-                  value={confirm}
-                  onChange={handelConfrimPass}
-                  style={{ border: confirmColor }}
-                />
-              </div>
-              <small className="text-danger">{confirmErr}</small>
-              <br />
-              <button
-                class="btn btn-dark text-white mt-3"
-                onClick={handelsubmit}
-              >
-                Submit
-              </button>
-            </form>
-          </>
+          <form onSubmit={createAccount}>
+            <div className="mb-3 mt-3">
+              <label>Name:</label>
+              <input
+                type="text"
+                name="name"
+                className="form-control"
+                placeholder="Enter your name"
+                value={formData.name}
+                onChange={handleInputChange}
+                style={{ border: fieldStyles.name }}
+              />
+              <small className="text-danger">{formErrors.name}</small>
+            </div>
+            <div className="mb-3 mt-3">
+              <label>Email:</label>
+              <input
+                type="email"
+                name="email"
+                className="form-control"
+                placeholder="Enter email"
+                value={formData.email}
+                onChange={handleInputChange}
+                style={{ border: fieldStyles.email }}
+              />
+              <small className="text-danger">{formErrors.email}</small>
+            </div>
+            <div className="mb-3 password">
+              <label>Password:</label>
+              <input
+                type={!showPassword ? "text" : "password"}
+                name="pass"
+                className="form-control"
+                placeholder="Enter password"
+                value={formData.pass}
+                onChange={handleInputChange}
+                style={{ border: fieldStyles.pass }}
+              />
+              <p onClick={() => setShowPassword(!showPassword)} className="eye">
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </p>
+              <small className="text-danger">{formErrors.pass}</small>
+            </div>
+            <div className="mb-3">
+              <label>Confirm Password:</label>
+              <input
+                type="password"
+                name="confirm"
+                className="form-control"
+                placeholder="Confirm password"
+                value={formData.confirm}
+                onChange={handleInputChange}
+                style={{ border: fieldStyles.confirm }}
+              />
+              <small className="text-danger">{formErrors.confirm}</small>
+            </div>
+            <button type="submit" className="btn btn-dark text-white mt-3">
+              {loading ? <PulseLoader  size={10} color="white"/> : " Register"}
+            </button>
+          </form>
         )}
       </div>
     </div>

@@ -1,22 +1,31 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 
 import "./Main.css";
 import { Link } from "react-router-dom";
 import { contextApi } from "../Context/Context";
 import { FaCartPlus } from "react-icons/fa";
-import { FaHeart } from "react-icons/fa6";
-import homePages from "../../assets/images/asset";
+import { FaHeart } from "react-icons/fa";
+import toast from "react-hot-toast";
 
 export default function Main() {
   const { open, products, homes, offices, handelAddToCart } =
     useContext(contextApi);
 
-  
-  return (
-    <div className="main ">
-      <div className="text-center mb-4">
-       
+  const [likedProducts, setLikedProducts] = useState({}); // Store liked status for each product
 
+  const handleLove = (productId) => {
+    if (!likedProducts[productId]) {
+      toast.success("Added to favorites");
+      setLikedProducts((prevState) => ({
+        ...prevState,
+        [productId]: true, // Mark the product as liked
+      }));
+    }
+  };
+
+  return (
+    <div className="main">
+      <div className="text-center mb-4">
         <h3>Popular Furniture</h3>
         <div className="mt-3 mb-5">
           <span
@@ -27,7 +36,7 @@ export default function Main() {
           </span>
           <span
             onClick={offices}
-            className={ `${open ? "active-text" : "text-secondary"} office`}
+            className={`${open ? "active-text" : "text-secondary"} office`}
           >
             - OFFICE
           </span>
@@ -46,12 +55,17 @@ export default function Main() {
                   <div className="cart-icons">
                     <FaCartPlus
                       className="cartd"
-                      onClick={() => handelAddToCart(product.id-1)}
+                      onClick={() => handelAddToCart(product.id - 1)}
                     />
                   </div>
 
                   <div className="heart-div">
-                    <FaHeart className="heartd" />
+                    <FaHeart
+                      className={`heartd ${
+                        likedProducts[product.id] ? "active" : ""
+                      }`} // Add 'active' class if liked
+                      onClick={() => handleLove(product.id)}
+                    />
                   </div>
                 </div>
                 <p className="text-center text-secondary pro-txt">
@@ -61,7 +75,6 @@ export default function Main() {
                   <p className="text-danger">{product.price}</p>
                   <p className="text-center">{product.oldPrice}</p>
                 </div>
-              
               </div>
             </div>
           ))}

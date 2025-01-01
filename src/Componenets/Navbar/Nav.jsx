@@ -10,6 +10,9 @@ import { IoMdCart } from "react-icons/io";
 
 export default function () {
   const handleNavLinkClick = () => {
+   const {userInfo} = useContext(contextApi)
+     console.log(userInfo)
+    console.log(userInfo)
     const collapsibleNavbar = document.getElementById("collapsibleNavbar");
     if (collapsibleNavbar) {
       const bootstrapCollapse = new bootstrap.Collapse(collapsibleNavbar, {
@@ -71,8 +74,9 @@ export default function () {
             <span className="add-count-number">{add}</span>
           </Link> */}
 
-          <Link to={"/login"} className=" d-md-block ">
-            <BsPerson className="me-2" />
+          <Link to={'/login'} className=" d-md-block ">
+          { <BsPerson className="me-2" />}
+
           </Link>
         </div>
       </div>

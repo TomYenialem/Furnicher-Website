@@ -1,6 +1,6 @@
 import "./App.css";
 import Nav from "./Componenets/Navbar/Nav";
-
+import { Toaster } from "react-hot-toast";
 
 import Footer from "./Componenets/Footer/Footer";
 import { Route, Routes, Router } from "react-router-dom";
@@ -14,9 +14,25 @@ import Login from "./Componenets/Login/Login";
 import ToHome from './Componenets/ToHome/ToHome'
 import ToOffice from "./Componenets/ToOffice/ToOffice";
 import Scroll from "./Componenets/ScrollTop/Scroll";
+import { useContext, useEffect } from "react";
+import { auth } from "./Componenets/Utility/Firebase";
+import { contextApi } from "./Componenets/Context/Context";
 
 
 function App() {
+  const {setAuthUser}=useContext(contextApi)
+  useEffect(()=>{
+auth.onAuthStateChanged(authUser=>{
+  if(authUser){
+    setAuthUser(authUser);
+    console.log(authUser);
+  }else{
+    console.log("no user is logged in");
+    setAuthUser(null);
+  }
+
+})
+  },[])
   return (
     <>
       <Nav />
@@ -32,6 +48,7 @@ function App() {
         <Route path="/toHome" element={<ToHome />} />
         <Route path="/office" element={<ToOffice />} />
       </Routes>
+      <Toaster position="top-right"/>
       <Footer />
     </>
   );

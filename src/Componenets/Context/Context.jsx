@@ -1,8 +1,12 @@
 import React, { createContext, useState } from "react";
 export const contextApi = createContext();
 import homePages from "../../assets/images/asset"; 
+import toast from "react-hot-toast";
 export default function Context({ children }) {
   const home = homePages.filter((pro) => pro.type === "home");
+  const[userInfo,setUserInfo]=useState([])
+  const[authUser,setAuthUser]=useState([])
+  console.log(userInfo)
      const office = homePages.filter((pro) => pro.type === "office");
   const [open, setOpen] = useState(false);
   const [products, setProducts] = useState(home);
@@ -17,6 +21,7 @@ export default function Context({ children }) {
       const hasProdcut = Object.values(addtoCartItem).some((pro) => pro > 0);
       if (hasProdcut) {
         setAdd((prev) => prev  + 1);
+        toast.success('Added')
       }
       console.log(addtoCartItem)
       return addtoCartItem;
@@ -69,6 +74,11 @@ export default function Context({ children }) {
     hasProdcut,
     add,
     setAdd,
+    userInfo,
+    setUserInfo,
+    authUser,
+    setAuthUser,
+
   };
   return (
     <div>
