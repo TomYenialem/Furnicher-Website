@@ -47,5 +47,5 @@ A full-stack e-commerce platform for ordering and purchasing furniture online. T
 1. **Clone the repository:**
 
    ```bash
-   git clone https://github.com//furniture-ecommerce.git
+   git clone (https://github.com/TomYenialem/Furnicher-Website.git)
    cd furniture-ecommerce
