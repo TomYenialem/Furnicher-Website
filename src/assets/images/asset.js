@@ -55,12 +55,6 @@ import l4 from "./light/l4.webp";
 import l5 from "./light/l5.jpeg";
 import l6 from "./light/l6.jpeg";
 
-
-export const allImages = {
-  home1,
-
-  of1,
-};
 // home page
 
 export const homePages = [

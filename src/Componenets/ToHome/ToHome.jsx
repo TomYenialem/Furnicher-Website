@@ -15,7 +15,7 @@ export default function ToHome() {
       </div>
       <div className="container pro homep">
         <div className="row row-cols-1 row-cols-md-4 gy-4">
-          {products.map((product) => (
+          {products.map((product,index) => (
             <div key={product.id} className="col m-auto">
               <div className="image-box text-warning">
                 <Link to={`/details/${product.id}`}>
@@ -25,7 +25,7 @@ export default function ToHome() {
                   <div className="cart-icons">
                     <FaCartPlus
                       className="cartd"
-                      onClick={() => handelAddToCart(product.id-1)}
+                      onClick={() => handelAddToCart(product.id)}
                     />
                   </div>
 

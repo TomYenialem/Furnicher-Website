@@ -1,11 +1,13 @@
 import React, { useState } from 'react'
 import './Contact.css'
 import toast from 'react-hot-toast'
+import { useNavigate } from 'react-router-dom'
 
 export default function Contact() {
  const [email,setEmail]=useState('')
  const [pass,setPass]=useState('')
  const[text,setText]=useState('')
+ const navigate=useNavigate()
  const sumbit=()=>{
 
    // form validation
@@ -29,6 +31,7 @@ export default function Contact() {
    setEmail('')
    setPass('')
    setText('')
+   navigate('/')
  }
 
   return (

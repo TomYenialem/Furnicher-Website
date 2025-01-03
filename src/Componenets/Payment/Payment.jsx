@@ -7,11 +7,12 @@ import toast from "react-hot-toast";
 import axiosBase from "../Api/Api";
 import { useNavigate } from "react-router-dom";
 
+
 function Payment() {
   const[loader,setLoader]=useState(false)
   const [err,setErr]=useState('')
   const navigate=useNavigate()
-  const { authUser, add, country, setAdd } = useContext(contextApi);
+  const { authUser, add, country, setAdd,allproduct,total } = useContext(contextApi);
  const stripe = useStripe();
  const elements = useElements();
     const handleChange = (e) => {
@@ -67,42 +68,49 @@ function Payment() {
       };
   return (
     <>
-    
- 
-    <div className="payment">
-      <p className="address">payment Address:</p>
-      <p className="email">
-        email:
-     
-        <strong>{authUser?.email}</strong>
-        <br />
-        <p>
-          Country:
-          <strong>
-          {country}
-
-          </strong>
+      <div className="payment">
+        <p className="address">payment Address:</p>
+        <p className="email">
+          email:
+          <strong>{authUser?.email}</strong>
+          <br />
+          <p>
+            Country:
+            <strong>
+              {country ? (
+                country
+              ) : (
+                <small style={{ color: "red" }}>No country selected</small>
+              )}
+            </strong>
+          </p>
         </p>
-      </p>
-      <p className="amount">
-        total amount:
-        <br />
-        <strong>{add}</strong>
-      </p>
-    </div>
-    <hr/>
-     <div className="stripe">
+        <p className="amount">
+          total amount:
+          <br />
+          <strong>{add}</strong>
+        </p>
+        <p className="amount">
+          total price:
+          <br />
+          <strong>{`$ ${total()}`}</strong>
+        </p>
+      </div>
+      <hr />
+      <div className="stripe">
         <form>
           {err && <p className="error">{err}</p>}
-          < CardElement onChange={handleChange} />
-          <button disabled={loader} onClick={handleSubmit} className="pay-btn">
-            {
-              loader? "Loading..." : "Pay Now"
-            }
+          <CardElement onChange={handleChange} />
+          <button
+            disabled={loader || add == 0}
+            onClick={handleSubmit}
+            className="pay-btn"
+          >
+            {loader ? "Loading..." : "Pay Now"}
           </button>
         </form>
       </div>
-      </>
+    </>
   );
 }
 

@@ -17,7 +17,7 @@ export default function Shop() {
   const [shopColor, setShopColor] = useState("");
   const [searchitem, setSearchItem] = useState("");
   const [likedProducts, setLikedProducts] = useState({});
-  const [match, setMatch] = useState(false);
+  const [match, setMatch] = useState(false); 
   // like button
   const handleLove = (productId) => {
     if (!likedProducts[productId]) {
@@ -220,7 +220,7 @@ export default function Shop() {
                         <div className="cart-icons">
                           <FaCartPlus
                             className="cartd"
-                            onClick={() => handelAddToCart(index)}
+                            onClick={() => handelAddToCart(product.id)}
                           />
                         </div>
 

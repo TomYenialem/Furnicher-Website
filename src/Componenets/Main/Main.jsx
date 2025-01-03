@@ -8,8 +8,15 @@ import { FaHeart } from "react-icons/fa";
 import toast from "react-hot-toast";
 
 export default function Main() {
-  const { open, products, homes, offices, handelAddToCart } =
-    useContext(contextApi);
+  const {
+    open,
+    products,
+    home,
+    office,
+    handelAddToCart,
+    setOpen,
+    setProducts,
+  } = useContext(contextApi);
 
   const [likedProducts, setLikedProducts] = useState({}); // Store liked status for each product
 
@@ -22,6 +29,15 @@ export default function Main() {
       }));
     }
   };
+    const handleHomeClick = () => {
+      setOpen(false); // Set open to false for home
+      setProducts(home); // Set products to home
+    };
+
+    const handleOfficeClick = () => {
+      setOpen(true); // Set open to true for office
+      setProducts(office); // Set products to office
+    };
 
   return (
     <div className="main">
@@ -29,13 +45,13 @@ export default function Main() {
         <h3>Popular Furniture</h3>
         <div className="mt-3 mb-5">
           <span
-            onClick={homes}
+            onClick={handleHomeClick}
             className={`${open ? "text-secondary" : "active-text"} home`}
           >
             HOME{" "}
           </span>
           <span
-            onClick={offices}
+            onClick={handleOfficeClick}
             className={`${open ? "active-text" : "text-secondary"} office`}
           >
             - OFFICE
@@ -45,7 +61,7 @@ export default function Main() {
 
       <div className="container pro">
         <div className="row row-cols-1 row-cols-md-4 gy-4">
-          {products.map((product) => (
+          {products?.map((product) => (
             <div key={product.id} className="col m-auto">
               <div className="image-box">
                 <Link to={`/details/${product.id}`}>
@@ -55,7 +71,7 @@ export default function Main() {
                   <div className="cart-icons">
                     <FaCartPlus
                       className="cartd"
-                      onClick={() => handelAddToCart(product.id - 1)}
+                      onClick={() => handelAddToCart(product.id)}
                     />
                   </div>
 
